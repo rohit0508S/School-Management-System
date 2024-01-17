@@ -1,10 +1,14 @@
 package com.school.sba.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +28,10 @@ public class School {
 	private String schoolName;
 	private long contactNo;
 	private String emailId;
-	private String address;
-	
+	private String address;	
 	@OneToOne
-	private Schedule schedule;
+	private Schedule schedule;	
+	@OneToMany(mappedBy = "school")
+	private List< Users> users;
 
 }

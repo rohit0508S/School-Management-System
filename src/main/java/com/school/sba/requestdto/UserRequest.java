@@ -29,9 +29,11 @@ public class UserRequest {
 	@NotBlank(message = "email can not be blank")
 	@Email(regexp = "[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.[a-z]{2,}", message = "invalid email ")
 	private String email;
-	@NotEmpty(message = "Password Can not be Empty")
+	@NotNull
+	@NotBlank
 	@Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
-	@Pattern(regexp = "^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password must" + " contain at least one letter, one number, one special character")
+	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password must"+ " contain at least one letter, one number, one special character")
 	private String password;
-	private UserRole userRole;
+	private UserRole role;
+//	private boolean isDeleted;
 }

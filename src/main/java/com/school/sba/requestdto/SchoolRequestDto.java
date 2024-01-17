@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
-public class SchoolRequestDto {
+public class SchoolRequestDto{
 	
 	private String schoolName;
 	private long contactNo;

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.school.sba.requestdto.SchoolRequestDto;
 import com.school.sba.responsedto.SchoolResponseDto;
 import com.school.sba.service.SchoolService;
@@ -23,14 +22,21 @@ public class SchoolController {
 	@Autowired
 	private SchoolService schoolService;
 	
-	@PostMapping("/schools")
-	public ResponseEntity<ResponseStructure<SchoolResponseDto>> saveSchool(@RequestBody SchoolRequestDto schoolRequestDto){
-		return schoolService.saveSchool(schoolRequestDto);
+	
+	
+	
+	@PostMapping("/users/{userId}/schools")
+	public ResponseEntity<ResponseStructure<SchoolResponseDto>> createSchool(@PathVariable int userId, @RequestBody SchoolRequestDto schoolRequestDto){
+		return schoolService.createSchool(schoolRequestDto,userId);
 	}
+	
 	@GetMapping("/schools/{schoolId}")
 	public ResponseEntity<ResponseStructure<SchoolResponseDto>> findSchoolById(@PathVariable int schoolId){
 		return schoolService.findSchoolById(schoolId);
 	}
+	
+	
+	
 	@DeleteMapping("/schools/{schoolId}")
 	public ResponseEntity<ResponseStructure<SchoolResponseDto>> deleteSchoolById(@PathVariable int schoolId){
 		return schoolService.deleteSchoolById(schoolId);

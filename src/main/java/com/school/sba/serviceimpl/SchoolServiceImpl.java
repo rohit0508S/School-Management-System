@@ -10,11 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.school.sba.entity.School;
+import com.school.sba.entity.Users;
+import com.school.sba.enums.UserRole;
 import com.school.sba.exception.SchoolDataNotFoundException;
 import com.school.sba.exception.SchoolNotFoundByIdException;
+import com.school.sba.exception.UserNotFoundByIdException;
 import com.school.sba.repositary.SchoolRepositary;
+import com.school.sba.repositary.UserRepository;
 import com.school.sba.requestdto.SchoolRequestDto;
 import com.school.sba.responsedto.SchoolResponseDto;
+//import com.school.sba.service.SchoolRequest;
 import com.school.sba.service.SchoolService;
 import com.school.sba.utility.ResponseStructure;
 @Service
@@ -24,8 +29,10 @@ public class SchoolServiceImpl implements SchoolService{
 	SchoolRepositary schoolRepo;
 	@Autowired
 	ResponseStructure<SchoolResponseDto> structure;
+	@Autowired
+	UserRepository userRepository;
 	
-	private School convertToSchool(SchoolRequestDto schoolRequestDto) {
+	private School mapToSchool(SchoolRequestDto schoolRequestDto) {
 		return School.builder()
 				.schoolName(schoolRequestDto.getSchoolName())
 				.contactNo(schoolRequestDto.getContactNo())
@@ -33,7 +40,7 @@ public class SchoolServiceImpl implements SchoolService{
 				.address(schoolRequestDto.getAddress())
 				.build();
 	}
-	private SchoolResponseDto convertToSchoolResponseDto(School school) {
+	private SchoolResponseDto mapToSchoolResponseDto(School school) {
 		
 		return SchoolResponseDto.builder()
 				.schoolId(school.getSchoolId())
@@ -43,24 +50,39 @@ public class SchoolServiceImpl implements SchoolService{
 				.address(school.getAddress())
 				.build();
 	}
-
+	
+	
+	
+	
 	@Override
-	public ResponseEntity<ResponseStructure<SchoolResponseDto>> saveSchool(SchoolRequestDto schoolRequestDto) {
-		School school=convertToSchool(schoolRequestDto);
-		
-		school = schoolRepo.save(school);
-		
-		SchoolResponseDto schoolResponseDto=convertToSchoolResponseDto(school);
-		
-		structure.setStatus(HttpStatus.CREATED.value());
-		structure.setMessage("School Created Successfully..!!!");
-		structure.setData(schoolResponseDto);
-		
-		
-		return new ResponseEntity<ResponseStructure<SchoolResponseDto>>(structure,HttpStatus.CREATED);
+	public ResponseEntity<ResponseStructure<SchoolResponseDto>> createSchool(SchoolRequestDto schoolRequestDto,int userId) {
+		return userRepository.findById(userId).map(u->{
+			if(u.getRole().equals(UserRole.ADMIN)) {
+				if(u.getSchool()==null) {
+					School school=mapToSchool(schoolRequestDto);
+					school=schoolRepo.save(school);
+					u.setSchool(school);
+					userRepository.save(u);
+					structure.setStatus(HttpStatus.FOUND.value());
+					structure.setMessage("School Data Found by id");
+					structure.setData(mapToSchoolResponseDto(school));
+					return new ResponseEntity<ResponseStructure<SchoolResponseDto>>(structure,HttpStatus.CREATED);
+				}
+				else
+				{
+					throw new IllegalArgumentException("User not found by Id");
+				}
+			}else
+					throw new IllegalArgumentException("User not found by Id");
+			
+		}).orElseThrow(()-> new UserNotFoundByIdException("User not found by Id"));
+	
+	
 	}
-
-
+	
+	
+	
+	
 	@Override
 	public ResponseEntity<ResponseStructure<SchoolResponseDto>> findSchoolById(int schoolId) {
 		Optional<School> optional = schoolRepo.findById(schoolId);
@@ -69,7 +91,7 @@ public class SchoolServiceImpl implements SchoolService{
 		{
 			School school = optional.get();
 			
-			SchoolResponseDto schoolResponseDto = convertToSchoolResponseDto(school);
+			SchoolResponseDto schoolResponseDto = mapToSchoolResponseDto(school);
 			
 			structure.setStatus(HttpStatus.FOUND.value());
 			structure.setMessage("School Data Found by id");
@@ -91,7 +113,7 @@ public class SchoolServiceImpl implements SchoolService{
 			
 			schoolRepo.delete(school);
 			
-			SchoolResponseDto schoolResponseDto = convertToSchoolResponseDto(school);
+			SchoolResponseDto schoolResponseDto = mapToSchoolResponseDto(school);
 			
 			structure.setStatus(HttpStatus.OK.value());
 			structure.setMessage("School Deleted Successfully");
@@ -112,12 +134,12 @@ public class SchoolServiceImpl implements SchoolService{
 		{
 			School oldschool = optional.get();
 			
-			School school = convertToSchool(schoolRequestDto);
+			School school = mapToSchool(schoolRequestDto);
 			school.setSchoolId(oldschool.getSchoolId());
 			
 			School school2 = schoolRepo.save(school);
 			
-			SchoolResponseDto schoolResponseDto = convertToSchoolResponseDto(school2);
+			SchoolResponseDto schoolResponseDto = mapToSchoolResponseDto(school2);
 			
 			structure.setStatus(HttpStatus.ACCEPTED.value());
 			structure.setMessage("School Data Updated Successfully");
@@ -140,7 +162,7 @@ public class SchoolServiceImpl implements SchoolService{
 			
 			for(School school : schholList)
 			{
-				SchoolResponseDto schoolResponseDto = convertToSchoolResponseDto(school);
+				SchoolResponseDto schoolResponseDto = mapToSchoolResponseDto(school);
 				list.add(schoolResponseDto);
 			}
 			ResponseStructure<List<SchoolResponseDto>> structure=new ResponseStructure<>();
@@ -155,5 +177,6 @@ public class SchoolServiceImpl implements SchoolService{
 		else
 			throw new SchoolDataNotFoundException("No Schools Present To fetch the Schools Data");
 	}
+	
 
 }

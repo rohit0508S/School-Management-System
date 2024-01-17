@@ -19,5 +19,5 @@ public class UserResponse {
 	private String lastName;
 	private Long contactNo;
 	private String email;
-	private UserRole userRole;
+	private UserRole role;
 }
