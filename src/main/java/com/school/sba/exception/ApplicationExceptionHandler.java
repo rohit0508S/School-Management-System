@@ -42,8 +42,20 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 	}
 	
 	
-	
+	 @ExceptionHandler(DataNotFoundException.class)
+	    public ResponseEntity<ErrorStructre<String>> handleRuntime(DataNotFoundException exception) {
+	        return new ResponseEntity<>(errstructure(HttpStatus.BAD_REQUEST, exception.getMessage(), "Illegal Argument"),
+	                HttpStatus.BAD_REQUEST);
+	    }
+
+	    private ErrorStructre<String> errstructure(HttpStatus status, String message, String rootCause) {
+	        ErrorStructre<String> errorStructure = new ErrorStructre<>();
+	        errorStructure.setStatus(status.value());
+	        errorStructure.setMessage(message);
+	        errorStructure.setRootCause(rootCause);
+	        return errorStructure;
+	    }
+	}
 	
 	
 
-}

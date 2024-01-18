@@ -1,5 +1,7 @@
 package com.school.sba.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,9 @@ public class AcademicProgramController {
 	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> createAcademicProgram(@PathVariable int schoolId,@RequestBody AcademicProgramRequest academicProgramRequest ){
 		return academicProgramService.createAcademicProgram(schoolId, academicProgramRequest);
 	}
-//	@GetMapping()
+	@GetMapping("/schools/{schoolId}/academic-programs")
+	public ResponseEntity<ResponseStructure<List<AcademicProgramResponse>>> findAllAcademicProgram(@PathVariable int schoolId){
+		return academicProgramService.findAllAcademicProgram(schoolId);
+	}
 	
 }
