@@ -20,9 +20,9 @@ public class ScheduleResponseDto {
 	private LocalTime opensAt;
 	private LocalTime closesAt;
 	private int  classHoursPerDay;
-	private Duration classHourLengthMinutes;
+	private int classHourLengthMinutes;
 	private LocalTime breakTime;
-	private Duration breakLengthMinutes;
+	private int breakLengthMinutes;
 	private LocalTime lunchTime;
-	private Duration lunchLengthMinutes;
+	private int lunchLengthMinutes;
 }

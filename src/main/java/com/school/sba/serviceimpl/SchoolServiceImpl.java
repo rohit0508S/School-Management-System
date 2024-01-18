@@ -63,7 +63,7 @@ public class SchoolServiceImpl implements SchoolService{
 					school=schoolRepo.save(school);
 					u.setSchool(school);
 					userRepository.save(u);
-					structure.setStatus(HttpStatus.FOUND.value());
+					structure.setStatus(HttpStatus.CREATED.value());
 					structure.setMessage("School Data Found by id");
 					structure.setData(mapToSchoolResponseDto(school));
 					return new ResponseEntity<ResponseStructure<SchoolResponseDto>>(structure,HttpStatus.CREATED);
