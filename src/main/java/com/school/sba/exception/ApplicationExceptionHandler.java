@@ -55,6 +55,18 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 	        errorStructure.setRootCause(rootCause);
 	        return errorStructure;
 	    }
+	    @ExceptionHandler(AcademicProgramNotFoundByIdException.class)
+		public ResponseEntity<ErrorStructre<String>> handleAcademicProgramNotFound(SchoolNotFoundByIdException e)
+		{
+			
+			
+			errstructure.setStatus(HttpStatus.NOT_FOUND.value());
+			errstructure.setMessage(e.getMessage());
+			errstructure.setRootCause("School Data Not Present for Given School Id");
+			
+			return new ResponseEntity<ErrorStructre<String>>(errstructure,HttpStatus.NOT_FOUND);
+			
+		}
 	}
 	
 	

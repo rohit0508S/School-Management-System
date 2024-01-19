@@ -36,18 +36,21 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 				.endsAt(academicProgramRequest.getEndsAt())
 				.build();
 	}
-	private AcademicProgramResponse mapToAcademicProgramResponse(AcademicProgram academicProgram)
+	public AcademicProgramResponse mapToAcademicProgramResponse(AcademicProgram academicProgram)
 	{
-		//List<String> subjectNames=new ArrayList<String>();
-		//academicProgram.getSubjects().forEach(subject->{
-//			subjectNames.add(subject.ge);
-		//});
-		
+		List<String> subjectNames=new ArrayList<String>();
+		if(academicProgram.getSubjects()!=null) {
+		academicProgram.getSubjects().forEach(subject->{
+			subjectNames.add(subject.getSubjectName());
+		});
+		}
 		return AcademicProgramResponse.builder()
+				.programId(academicProgram.getProgramId())
+				.programType(academicProgram.getProgramType())
 				.programName(academicProgram.getProgramName())
 				.beginsAt(academicProgram.getBeginsAt())
 				.endsAt(academicProgram.getEndsAt())
-			
+			    .subject(subjectNames)
 				.build();
 	}
 		
