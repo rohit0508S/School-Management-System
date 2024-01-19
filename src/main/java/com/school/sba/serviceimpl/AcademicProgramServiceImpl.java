@@ -38,16 +38,16 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 	}
 	private AcademicProgramResponse mapToAcademicProgramResponse(AcademicProgram academicProgram)
 	{
-		List<String> subjectNames=new ArrayList<String>();
-		academicProgram.getSubjects().forEach(subject->{
-			subjectNames.add(subject.get);
-		});
+		//List<String> subjectNames=new ArrayList<String>();
+		//academicProgram.getSubjects().forEach(subject->{
+//			subjectNames.add(subject.ge);
+		//});
 		
 		return AcademicProgramResponse.builder()
 				.programName(academicProgram.getProgramName())
 				.beginsAt(academicProgram.getBeginsAt())
 				.endsAt(academicProgram.getEndsAt())
-				.subject(subjectNames)
+			
 				.build();
 	}
 		
@@ -65,51 +65,39 @@ public ResponseEntity<ResponseStructure<AcademicProgramResponse>> createAcademic
 	            responseStructure.setData(response);             
 	            return new ResponseEntity<>(responseStructure, HttpStatus.CREATED);
 		    }).orElseThrow(() -> new SchoolNotFoundByIdException("School not found...!"));
-
 	}
 
-//@Override
-//public ResponseEntity<ResponseStructure<AcademicProgramResponse>> findAllAcademicProgram(int schoolId) {
-//    List<AcademicProgram> academicPrograms = academicProgramRepository.findAll();
-//    
-//    if (academicPrograms.isEmpty()) {
-//        responseStructure.setStatus(HttpStatus.NOT_FOUND.value());
-//        responseStructure.setMessage("No academic programs found for the given school ID");
-//        responseStructure.setData(null);
-//    } else {
-//    	
-//    	
-//        AcademicProgramResponse response = mapToAcademicProgramResponse(academicPrograms.get(schoolId));
-//        
-//        responseStructure.setStatus(HttpStatus.OK.value());
-//        responseStructure.setMessage("Academic program retrieved successfully");
-//        responseStructure.setData(response);
-//    }
-//
-//    return new ResponseEntity<>(responseStructure, HttpStatus.OK);
-//}
-@Override
+
 public ResponseEntity<ResponseStructure<List<AcademicProgramResponse>>> findAllAcademicProgram(int schoolId) {
-	return schoolRepositary.findById(schoolId).map(school -> {
+    return schoolRepositary.findById(schoolId).map(school -> {
 
-		List<AcademicProgram> programs = academicProgramRepository.findAll();
+        List<AcademicProgram> programs = academicProgramRepository.findAll();
 
-		if (!programs.isEmpty()) {
-			List<AcademicProgramResponse> list = new ArrayList<>();
+        if (!programs.isEmpty()) {
+            List<AcademicProgramResponse> list = new ArrayList<>();
 
-			for (AcademicProgram program : programs) {
-				AcademicProgramResponse response = mapToAcademicProgramResponse(program);
-				list.add(response);
-			}
-			ResponseStructure<List<AcademicProgramResponse>> structure = new ResponseStructure<>();
-			structure.setStatus(HttpStatus.FOUND.value());
-			structure.setMessage("Here is the list Academic-Progrms of our SCHOOL");
-			structure.setData(list);
-			return new ResponseEntity<ResponseStructure<List<AcademicProgramResponse>>>(structure,
-					HttpStatus.FOUND);
-		} else
-			throw new DataNotFoundException("No Academic Programs present for given school");
+            for (AcademicProgram program : programs) {
+                AcademicProgramResponse response = mapToAcademicProgramResponse(program);
+                list.add(response);
+            }
 
-	}).orElseThrow(() -> new SchoolNotFoundByIdException("School Not Present for given school id"));
+            ResponseStructure<List<AcademicProgramResponse>> structure = new ResponseStructure<>();
+            structure.setStatus(HttpStatus.OK.value()); // Use OK for a successful response
+            structure.setMessage("Here is the list of Academic Programs for our school");
+            structure.setData(list);
+
+            return new ResponseEntity<>(structure, HttpStatus.OK);
+        } else {
+            // Use 204 No Content for an empty list
+            throw new DataNotFoundException("No Academic Programs present for the given school");
+        }
+
+    }).orElseThrow(() -> new SchoolNotFoundByIdException("School not found for the given school id"));
 }
+
 }
+
+
+
+
+

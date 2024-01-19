@@ -26,8 +26,8 @@ public class Subject {
 private int subjectId;
 private String subjectName;
 
-@OneToMany
-private List<AcademicProgram> academicPrograms;
+//@OneToMany
+//private List<AcademicProgram> academicPrograms;
 
 
 }

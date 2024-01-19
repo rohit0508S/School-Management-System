@@ -35,6 +35,6 @@ public class AcademicProgram {
     private List<Users> user;
     @ManyToOne
     private School school;
-    @OneToMany
-    private List<String> subjects;
+//    @OneToMany
+//    private List<String> subjects;
 }
