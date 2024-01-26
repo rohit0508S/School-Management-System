@@ -17,6 +17,7 @@ import com.school.sba.entity.User;
 import com.school.sba.enums.USERROLE;
 import com.school.sba.exception.AdminCannotBeAssignToAcademicProgramException;
 import com.school.sba.exception.DataNotExistException;
+import com.school.sba.exception.InvalidSubjectException;
 import com.school.sba.exception.InvalidUserRoleException;
 import com.school.sba.exception.ProgramNotFoundByIdException;
 import com.school.sba.exception.SchoolDataNotFoundException;
@@ -129,9 +130,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToTeacher(int subjectId, int userId) {
 	         
+		Optional<User> users=userRepo.findById(userId);		
+		
 		return userRepo.findById(userId).map(user ->{
 			if(user.getUserRole().equals(USERROLE.TEACHER))
 			{
+				
 				subjectRepo.findById(subjectId).map(subject ->{					
 					user.setSubject(subject);
 					return userRepo.save(user);
@@ -148,6 +152,9 @@ public class UserServiceImpl implements UserService {
 				throw new UnAuthorisedUserException("Invalid User, we cant add");
 		}).orElseThrow(()->new UserNotFoundByIdException("User Not Present for given user id"));
 	}
+	
+	
+	
 	
 	
 	

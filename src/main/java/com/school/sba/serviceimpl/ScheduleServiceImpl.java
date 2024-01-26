@@ -34,7 +34,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 		return Schedule.builder().opensAt(scheduleRequest.getOpensAt()).closesAt(scheduleRequest.getClosesAt())
 				.classHoursPerday(scheduleRequest.getClassHoursPerday())
 				.classHoursLengthInMinutes(Duration.ofMinutes(scheduleRequest.getClassHoursLengthInMinutes()))
-				.breaktime(scheduleRequest.getBreaktime())
+				.breakTime(scheduleRequest.getBreaktime())
 				.breakeLengthInMinutes(Duration.ofMinutes(scheduleRequest.getBreakeLengthInMinutes()))
 				.lunchTime(scheduleRequest.getLunchTime())
 				.lunchBreakLengthInMinutes(Duration.ofMinutes(scheduleRequest.getLunchBreakLengthInMinutes())).build();
@@ -44,7 +44,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 		return ScheduleResponse.builder().scheduleId(schedule.getScheduleId()).opensAt(schedule.getOpensAt())
 				.classHoursLengthInMinutes((int) schedule.getClassHoursLengthInMinutes().toMinutes())
 				.closesAt(schedule.getClosesAt()).classHoursPerday(schedule.getClassHoursPerday())
-				.breaktime(schedule.getBreaktime())
+				.breaktime(schedule.getBreakTime())
 				.breakeLengthInMinutes((int) schedule.getBreakeLengthInMinutes().toMinutes())
 				.lunchTime(schedule.getLunchTime())
 				.lunchBreakLengthInMinutes((int) schedule.getLunchBreakLengthInMinutes().toMinutes()).build();

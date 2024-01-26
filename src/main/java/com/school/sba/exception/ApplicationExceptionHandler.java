@@ -106,7 +106,12 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 		return structure(HttpStatus.NOT_FOUND, e.getMessage(), "School list not present");
 	}
 	
-	
+
+	@ExceptionHandler(InvalidSubjectException.class)
+	public ResponseEntity<Object> InvalidSubjectException(DataNotExistException e)
+	{
+		return structure(HttpStatus.NOT_FOUND, e.getMessage(), "Subject list not present");
+	}
 	
 
 }

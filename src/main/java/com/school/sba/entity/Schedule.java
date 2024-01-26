@@ -29,8 +29,9 @@ public class Schedule {
 	private LocalTime closesAt;
 	private int classHoursPerday;
 	private Duration classHoursLengthInMinutes;
-	private LocalTime breaktime;
+	private LocalTime breakTime;
 	private Duration breakeLengthInMinutes;
 	private LocalTime lunchTime;
 	private Duration lunchBreakLengthInMinutes;
+	
 }
