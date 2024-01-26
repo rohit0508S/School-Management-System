@@ -17,15 +17,20 @@ import com.school.sba.utility.ResponseStructure;
 
 @RestController
 public class AcademicProgramController {
-	@Autowired
-	private AcademicProgramService academicProgramService;
-	@PostMapping("/schools/{schoolId}/academic-programs")
-	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> createAcademicProgram(@PathVariable int schoolId,@RequestBody AcademicProgramRequest academicProgramRequest ){
-		return academicProgramService.createAcademicProgram(schoolId, academicProgramRequest);
+	@Autowired 
+	private AcademicProgramService programService;
+	
+	@PostMapping("/schools/{schoolId}/academic-program")
+	public ResponseEntity<ResponseStructure<AcademicProgramResponse>>
+	                          addAcademicPrograms(@PathVariable int schoolId,@RequestBody AcademicProgramRequest programRequest )
+	{
+		return programService.addAcademicPrograms(schoolId,programRequest);
 	}
+	
 	@GetMapping("/schools/{schoolId}/academic-programs")
-	public ResponseEntity<ResponseStructure<List<AcademicProgramResponse>>> findAllAcademicProgram(@PathVariable int schoolId){
-		return academicProgramService.findAllAcademicProgram(schoolId);
+	public ResponseEntity<ResponseStructure<List<AcademicProgramResponse>>> findAllAcademicPrograms(@PathVariable int schoolId)
+	{
+		return programService.findAllAcademicPrograms(schoolId);
 	}
 	
 }

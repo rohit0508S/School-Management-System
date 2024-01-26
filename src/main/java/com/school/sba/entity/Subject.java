@@ -1,7 +1,5 @@
 package com.school.sba.entity;
 
-
-
 import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+
 @Getter
 @Builder
 @Setter
@@ -25,6 +25,4 @@ public class Subject {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int subjectId;
 	private String subjectName;
-	@ManyToMany
-	private List<AcademicProgram> academicPrograms;
 }

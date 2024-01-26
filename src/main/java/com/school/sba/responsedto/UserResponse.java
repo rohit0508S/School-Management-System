@@ -1,6 +1,9 @@
 package com.school.sba.responsedto;
 
-import com.school.sba.enums.UserRole;
+import java.util.List;
+
+import com.school.sba.entity.AcademicProgram;
+import com.school.sba.enums.USERROLE;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,10 +17,13 @@ import lombok.Setter;
 @Builder
 public class UserResponse {
 	private int userId;
-	private String username;
+	private String userName;
 	private String firstName;
 	private String lastName;
-	private Long contactNo;
+	private long contactNo;
 	private String email;
-	private UserRole role;
+	private USERROLE userRole;
+	private boolean isDeleted;
+	private List<AcademicProgram> academicPrograms;
+
 }

@@ -10,9 +10,9 @@ import com.school.sba.utility.ResponseStructure;
 
 public interface AcademicProgramService {
 
-	ResponseEntity<ResponseStructure<AcademicProgramResponse>> createAcademicProgram(int schoolId,
-			AcademicProgramRequest academicProgramRequest);
+	ResponseEntity<ResponseStructure<AcademicProgramResponse>> addAcademicPrograms(int schoolId,
+			AcademicProgramRequest programRequest);
 
-	ResponseEntity<ResponseStructure<List<AcademicProgramResponse>>> findAllAcademicProgram(int schoolId);
+	ResponseEntity<ResponseStructure<List<AcademicProgramResponse>>> findAllAcademicPrograms(int schoolId);
 
 }

@@ -1,5 +1,4 @@
 package com.school.sba.exception;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataNotFoundException extends RuntimeException{
+public class InvalidUserRoleException extends RuntimeException{
 private String message;
-
 }

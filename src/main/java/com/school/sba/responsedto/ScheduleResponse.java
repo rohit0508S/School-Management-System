@@ -15,14 +15,16 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScheduleResponseDto {
+public class ScheduleResponse {
+	
 	private int scheduleId;
 	private LocalTime opensAt;
 	private LocalTime closesAt;
-	private int  classHoursPerDay;
-	private int classHourLengthMinutes;
-	private LocalTime breakTime;
-	private int breakLengthMinutes;
+	private int classHoursPerday;
+	private int classHoursLengthInMinutes;
+	private LocalTime breaktime;
+	private int breakeLengthInMinutes;
 	private LocalTime lunchTime;
-	private int lunchLengthMinutes;
+	private int lunchBreakLengthInMinutes;
+
 }

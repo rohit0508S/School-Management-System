@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SchoolDataNotFoundException extends RuntimeException {
+public class ScheduleNotFoundException extends RuntimeException {
 	
 	String message;
 

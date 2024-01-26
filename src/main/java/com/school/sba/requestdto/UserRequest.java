@@ -1,8 +1,10 @@
 package com.school.sba.requestdto;
 
-import com.school.sba.enums.UserRole;
+
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -19,21 +21,35 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequest {
-	@NotNull(message = "userName can not be Null")
-	@Pattern(regexp = "^[A-Z][a-z](\\s[A-Z][a-z])?$", message = "Username should follow the initcap format")
-	private String username;	
-	private String firstName;
-	private String lastName;
-	@Pattern(regexp = "^(?=.*[0-9])")
-	private Long contactNo;
-	@NotBlank(message = "email can not be blank")
-	@Email(regexp = "[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.[a-z]{2,}", message = "invalid email ")
-	private String email;
-	@NotNull
-	@NotBlank
+
+	@NotEmpty(message = "UserName is Required!!")
+	@Size(min = 3, max=20,message = "User Name must be between 3 and 20 characters")
+	@Pattern(regexp = "^[a-zA-Z0-9]+$",message = "User Name can only contain alphabets and numbers no special symbols")
+	private String userName;
+	
+	@NotEmpty(message = "UserName is Required!!")
 	@Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
-	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password must"+ " contain at least one letter, one number, one special character")
+	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
+	message = "Password must"+ " contain at least one letter, one number, one special character")
 	private String password;
-	private UserRole role;
-//	private boolean isDeleted;
+	
+	@NotEmpty(message = "firstname cannot be empty")
+	@Pattern(regexp = "^[A-Z][a-z]*(\\s[A-Z][a-z]*)?$", message = "Username should follow initcap format")
+	private String firstName;
+	
+	@NotEmpty(message = "lastname cannot be empty")
+	@Pattern(regexp = "^[A-Z][a-z]*(\\s[A-Z][a-z]*)?$", message = "Username should follow initcap format")
+	private String lastName;
+	@Min(value = 6000000000l, message = " phone number must be valid")
+	@Max(value = 9999999999l, message = " phone number must be valid")
+	private long contactNo;
+	
+	@NotEmpty(message = "email cannot be not null & not blank")
+	@Email(regexp = "[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.[a-z]{2,}", message = "invalid email")
+	private String email;
+	
+	@NotEmpty(message = "User role cannot be empty")
+	@Pattern(regexp = "^(ADMIN|TEACHER|STUDENT)$",message = "Plese mention ADMIN or STUDENT or TEACHER")
+	private String userRole;
+
 }

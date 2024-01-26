@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SchoolDataNotFoundException extends RuntimeException {
-	
-	String message;
-
+public class ScheduleNotFoundByIdException extends RuntimeException{
+private String message;
 }

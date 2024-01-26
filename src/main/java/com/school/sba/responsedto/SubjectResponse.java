@@ -1,7 +1,4 @@
-package com.school.sba.requestdto;
-
-import java.util.List;
-
+package com.school.sba.responsedto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +10,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubjectRequestDto {
-	 private List<String> subjectName;
+public class SubjectResponse {
+	
+	private int subjectId;
+	private String subjectName;
 
 }

@@ -1,10 +1,13 @@
 package com.school.sba.entity;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import com.school.sba.enums.ProgramType;
+import com.school.sba.enums.PROGRAMTYPE;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,17 +27,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class AcademicProgram {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int programId;
+	
+	@Enumerated(EnumType.STRING)
+	private PROGRAMTYPE programtype;
 	private String programName;
-	private LocalTime beginsAt;
-	private LocalTime endsAt;
-    private ProgramType programType;    
-    @ManyToMany(mappedBy = "academicProgram")
-    private List<Users> user;
-    @ManyToOne
-    private School school;
-   @ManyToMany
-    private List<Subject> subjects;
+	private LocalDate beginsAt;
+	private LocalDate endsAt;
+	
+	@ManyToOne
+	private School school;
+	
+	@ManyToMany
+	private List<Subject> subjects;
+	
+	@ManyToMany
+	private List<User> users;
 }

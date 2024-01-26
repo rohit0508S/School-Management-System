@@ -28,12 +28,11 @@ public class School {
 	private String schoolName;
 	private long contactNo;
 	private String emailId;
-	private String address;	
+	private String address;
 	@OneToOne
-	private Schedule schedule;	
+	Schedule schedule;
+	
 	@OneToMany(mappedBy = "school")
-	private List< Users> users;
-	@OneToMany(mappedBy = "school")
-	private List<AcademicProgram> academicProgram;
+	private List<AcademicProgram> programs;
 
 }

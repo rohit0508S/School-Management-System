@@ -13,15 +13,11 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchoolResponseDto {
+public class SchoolResponse {
 	
 	private int schoolId;
 	private String schoolName;
 	private long contactNo;
 	private String emailId;
 	private String address;
-	
-	@OneToOne
-	private Schedule schedule;
-
 }

@@ -27,12 +27,10 @@ public class Schedule {
 	private int scheduleId;
 	private LocalTime opensAt;
 	private LocalTime closesAt;
-	private int  classHoursPerDay;
-	private Duration classHourLengthMinutes;
-	private LocalTime breakTime;
-	private Duration breakLengthMinutes;
+	private int classHoursPerday;
+	private Duration classHoursLengthInMinutes;
+	private LocalTime breaktime;
+	private Duration breakeLengthInMinutes;
 	private LocalTime lunchTime;
-	private Duration lunchLengthMinutes;
-	@OneToOne
-    private School school;
+	private Duration lunchBreakLengthInMinutes;
 }
