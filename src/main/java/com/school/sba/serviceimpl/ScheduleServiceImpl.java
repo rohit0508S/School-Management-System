@@ -51,7 +51,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<ScheduleResponse>> createSchedule(int schoolId,ScheduleRequest scheduleRequest) 
+	public ResponseEntity<ResponseStructure<ScheduleResponse>> adminCreateSchedule(int schoolId,ScheduleRequest scheduleRequest) 
 	{
 		return schoolRepo.findById(schoolId).map(school->{
 			
@@ -76,6 +76,13 @@ public class ScheduleServiceImpl implements ScheduleService{
 		}).orElseThrow(()->new SchoolNotFoundByIdException("School Not Present for given school id"));
 		
 	}
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public ResponseEntity<ResponseStructure<ScheduleResponse>> findScheduleBySchool(int schoolId) 

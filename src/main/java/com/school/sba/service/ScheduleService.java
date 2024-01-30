@@ -7,7 +7,7 @@ import com.school.sba.utility.ResponseStructure;
 
 public interface ScheduleService {
 
-	ResponseEntity<ResponseStructure<ScheduleResponse>> createSchedule(int schoolId, ScheduleRequest scheduleRequest);
+	ResponseEntity<ResponseStructure<ScheduleResponse>> adminCreateSchedule(int schoolId, ScheduleRequest scheduleRequest);
 
 	ResponseEntity<ResponseStructure<ScheduleResponse>> findScheduleBySchool(int schoolId);
 

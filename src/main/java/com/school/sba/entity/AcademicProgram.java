@@ -27,7 +27,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class AcademicProgram {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int programId;

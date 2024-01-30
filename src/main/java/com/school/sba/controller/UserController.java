@@ -23,7 +23,13 @@ public class UserController {
 	@Autowired
 
 	private UserService userService;
-
+	
+	@PostMapping("/users/register")
+	public ResponseEntity<ResponseStructure<UserResponse>> createAdmin(@RequestBody UserRequest userRequest) {
+		return userService.createAdmin(userRequest);
+	}
+	
+	
 	@PostMapping("/users")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<ResponseStructure<UserResponse>> addOtherUser(@RequestBody @Valid UserRequest userRequest) {
@@ -35,10 +41,7 @@ public class UserController {
 		return userService.findUserById(userId);
 	}
 
-	@PostMapping("/users/register")
-	public ResponseEntity<ResponseStructure<UserResponse>> createAdmin(@RequestBody UserRequest userRequest) {
-		return userService.createAdmin(userRequest);
-	}
+	
 
 	// For multiple users authority
 	// "hasAuthority('ADMIN') OR hasAuthority('STUDENT')"
@@ -55,7 +58,7 @@ public class UserController {
 			@PathVariable int userId) {
 		return userService.assignUsersToAcademicProgram(programId, userId);
 	}
-
+    @PreAuthorize("hasAuthority('ADMIN')")
 	@PutMapping("/subjects/{subjectId}/users/{userId}")
 	public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToTeacher(@PathVariable int subjectId,
 			@PathVariable int userId) {

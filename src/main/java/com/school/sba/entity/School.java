@@ -29,6 +29,10 @@ public class School {
 	private long contactNo;
 	private String emailId;
 	private String address;
+	
+	@OneToMany(mappedBy = "school")
+	private List<User> users;
+	
 	@OneToOne
 	Schedule schedule;
 	

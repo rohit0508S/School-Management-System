@@ -40,6 +40,7 @@ public class UserRequest {
 	@NotEmpty(message = "lastname cannot be empty")
 	@Pattern(regexp = "^[A-Z][a-z]*(\\s[A-Z][a-z]*)?$", message = "Username should follow initcap format")
 	private String lastName;
+	
 	@Min(value = 6000000000l, message = " phone number must be valid")
 	@Max(value = 9999999999l, message = " phone number must be valid")
 	private long contactNo;

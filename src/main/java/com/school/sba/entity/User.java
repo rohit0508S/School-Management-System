@@ -42,8 +42,10 @@ public class User {
 	private boolean isDeleted;
 	@ManyToOne
 	private School school;	
+	
 	@ManyToMany(mappedBy = "users")
 	private List<AcademicProgram> academicPrograms;	
+	
 	@ManyToOne
 	private Subject subject;
 		

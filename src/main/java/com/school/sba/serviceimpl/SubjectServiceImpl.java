@@ -49,25 +49,23 @@ public class SubjectServiceImpl implements SubjectService{
 		
 		
 		return programRepo.findById(programId).map(program -> {
-	        List<Subject> subjects = new ArrayList<>();
+	        List<Subject> subjects = new ArrayList<Subject>();
+          subjectRequest.getSubjectNames().forEach(name->{
+        	  Subject subject=subjectRepo.findBySubjectName(name).map(s->s).orElseGet(()->{
+        		      Subject subject2=new Subject();
+        		      subject2.setSubjectName(name);
+        		      subjectRepo.save(subject2);
+        		      return subject2;
+        	  });
+        	  subjects.add(subject);
+          });
+	        
+          program.setSubjects(subjects);
+	      programRepo.save(program);
 
-	        List<String> subjectNames = subjectRequest.getSubjectNames();
-
-	        if (subjectNames != null) {
-	            for (int i = 0; i < subjectNames.size(); i++) {
-	                String name = subjectNames.get(i);
-	                Subject subject = new Subject();
-	                subject.setSubjectName(name);
-	                subjects.add(subject);
-	            }
-	        }
-
-	        program.setSubjects(subjects);
-	        programRepo.save(program);
-
-	        structure.setStatus(HttpStatus.CREATED.value());
-	        structure.setMessage("Update the subject list to Academic Program");
-	        structure.setData(academicProgramServiceImpl.mapToAcademicProgramResponse(program));
+	      structure.setStatus(HttpStatus.CREATED.value());
+	      structure.setMessage("Update the subject list to Academic Program");
+	      structure.setData(academicProgramServiceImpl.mapToAcademicProgramResponse(program));
 
 	        return new ResponseEntity<>(structure, HttpStatus.CREATED);
 

@@ -212,9 +212,6 @@ public class UserServiceImpl implements UserService {
 		 }).orElseThrow(()->new UnAuthorisedUserException("User Not Authorised"));	
 
 	}
-
-	
-	
 	
 	}
 	

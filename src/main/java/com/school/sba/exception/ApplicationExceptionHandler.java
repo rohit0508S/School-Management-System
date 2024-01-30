@@ -112,6 +112,10 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 	{
 		return structure(HttpStatus.NOT_FOUND, e.getMessage(), "Subject list not present");
 	}
-	
+	@ExceptionHandler(ClassHourNotFoundByIdException.class)
+	public ResponseEntity<Object> ClassHourNotFoundByIdException(ClassHourNotFoundByIdException e)
+	{
+		return structure(HttpStatus.NOT_FOUND, e.getMessage(), "ClassHour list not present");
+	}
 
 }
