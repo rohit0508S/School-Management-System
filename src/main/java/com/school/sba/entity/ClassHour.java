@@ -34,6 +34,7 @@ private int classHourId;
 private LocalDateTime beginsAt ;
 private LocalDateTime endsAt;
 private int roomNo;
+private boolean isUpdated;
 @Enumerated(EnumType.STRING)
 private  CLASSSTATUS classStatus ;
 @ManyToOne

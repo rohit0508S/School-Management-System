@@ -29,7 +29,7 @@ public class School {
 	private long contactNo;
 	private String emailId;
 	private String address;
-	private boolean isDelete;
+	private boolean isDeleted;
 	
 	@OneToMany(mappedBy = "school")
 	private List<User> users;

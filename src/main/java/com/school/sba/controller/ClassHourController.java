@@ -31,9 +31,5 @@ public class ClassHourController {
 	public ResponseEntity<ResponseStructure<List<ClassHourResponse>>> updateClassHour(@RequestBody List<ClassHourRequest> classHourRequests){
 		return classHourService.updateClassHour(classHourRequests);
 	}
-	@PutMapping("/class-hours/auto-generate")
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<ResponseStructure<List<ClassHourResponse>>> classHourAutogenerate(@RequestBody List<ClassHourRequest> classHourRequests){
-		return classHourService.classHourAutogenerate(classHourRequests);
-	}
+	
 }

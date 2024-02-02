@@ -118,6 +118,7 @@ public class ClassHourImpl implements ClassHourService {
 							          classHour.setEndsAt(classHour.getBeginsAt().plus(schedule.getClassHoursLengthInMinutes()));
 							          classHour.setClassStatus(CLASSSTATUS.NOT_SCHEDULED);
 							          classHour.setAcademicProgram(academicProgarm);
+							          classHour.setUpdated(true);
 							          perDayClassHours.add(classHourRepository.save(classHour));
 							          lastHour = perDayClassHours.get(entry - 1).getEndsAt();
 						              currentTime = lastHour.toLocalTime();
@@ -187,13 +188,12 @@ public class ClassHourImpl implements ClassHourService {
 	}
 	
 	
-	
-	
-
-
-	
-	
-	
+	public void autoGenerateClassHour() {
+		List<ClassHour> classHour=classHourRepository.findByIsUpdated(true);
+		for(ClassHour classHour1:classHour) {
+			classHourRepository.save(classHour1);
+		}
+	}
 	
 	
 	
