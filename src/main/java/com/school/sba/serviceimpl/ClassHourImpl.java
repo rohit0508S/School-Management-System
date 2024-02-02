@@ -1,15 +1,21 @@
 package com.school.sba.serviceimpl;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tomcat.util.http.ConcurrentDateFormat;
+import org.hibernate.grammars.hql.HqlParser.CurrentDateFunctionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.auditing.CurrentDateTimeProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.school.sba.entity.AcademicProgram;
 import com.school.sba.entity.ClassHour;
 import com.school.sba.entity.Schedule;
 import com.school.sba.entity.School;
@@ -77,109 +83,119 @@ public class ClassHourImpl implements ClassHourService {
 			if (schedule == null) {
 				throw new ScheduleNotFoundException("Failed to Generate class hour");
 			}
+			
 			if (academicProgarm.getClassHour() == null || academicProgarm.getClassHour().isEmpty()) {
 				List<ClassHour> perDayClassHours = new ArrayList<ClassHour>();
 				LocalDate date = academicProgarm.getBeginsAt();
+				int end=6;
+			    DayOfWeek dayOfWeek = date.getDayOfWeek();
+			       if(!dayOfWeek.equals(DayOfWeek.MONDAY))
+			       end=end+(7- dayOfWeek.getValue());
+			    	   
+			    	   for (int day =1; day <=end; day++) {
+			    		   if(date.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+			    			   date=date.plusDays(1);
+						      LocalTime currentTime = schedule.getOpensAt();
+						      LocalDateTime lastHour = null;
+						
 
-				for (int day = 1; day <= 6; day++) {
-					LocalTime currentTime = schedule.getOpensAt();
-					LocalDateTime lastHour = null;
-
-					for (int entry = 1; entry <= schedule.getClassHoursPerday(); entry++) {
-						ClassHour classHour = new ClassHour();
-						if (currentTime.equals(schedule.getOpensAt())) {// first class hour of the day
-							classHour.setBeginsAt(dateToDateTime(date, currentTime));
-						} else if (currentTime.equals(schedule.getBreakTime())) {// after break time
-							lastHour = lastHour.plus(schedule.getBreakeLengthInMinutes());
-							classHour.setBeginsAt(dateToDateTime(date, lastHour.toLocalTime()));
-
-						} else if (currentTime.equals(schedule.getLunchTime())) {// after lunch time
-							lastHour = lastHour.plus(schedule.getLunchBreakLengthInMinutes());
-							classHour.setBeginsAt(dateToDateTime(date, lastHour.toLocalTime()));
-						} else {// rest class hours of that day
-							classHour.setBeginsAt(dateToDateTime(date, lastHour.toLocalTime()));
-						}
-						classHour.setEndsAt(classHour.getBeginsAt().plus(schedule.getClassHoursLengthInMinutes()));
-						classHour.setClassStatus(CLASSSTATUS.NOT_SCHEDULED);
-						classHour.setAcademicProgram(academicProgarm);
-						perDayClassHours.add(classHourRepository.save(classHour));
-						lastHour = perDayClassHours.get(entry - 1).getEndsAt();
-						currentTime = lastHour.toLocalTime();
-
-						if (currentTime.equals(schedule.getClosesAt()))// school closing time
-							break;
-					}
-					date = date.plusDays(1);
-				}
-				academicProgarm.setClassHour(perDayClassHours);
-				programRepo.save(academicProgarm);
-
-				structure.setStatus(programId);
-				structure.setData(null);
-				structure.setMessage("ClassHour Generated for::" + academicProgarm.getProgramName());
-
-				return new ResponseEntity<ResponseStructure<ClassHourResponse>>(structure, HttpStatus.CREATED);
-			} else
-				throw new IllegalArgumentException("ClassHours Already Generated for::"
-						+ academicProgarm.getProgramName() + "of Id:" + academicProgarm.getProgramId());
-		}).orElseThrow(() -> new ProgramNotFoundByIdException("Invalid Program Id"));
-	}
+						      for (int entry = 1; entry <= schedule.getClassHoursPerday(); entry++) {
+						     	      ClassHour classHour = new ClassHour();
+							          if (currentTime.equals(schedule.getOpensAt())) {// first class hour of the day
+								      classHour.setBeginsAt(dateToDateTime(date, currentTime));
+							          } 
+							          else if (currentTime.equals(schedule.getBreakTime())) {// after break time
+								      lastHour = lastHour.plus(schedule.getBreakeLengthInMinutes());
+								      classHour.setBeginsAt(dateToDateTime(date, lastHour.toLocalTime()));
+							          } 
+							          else if (currentTime.equals(schedule.getLunchTime())) {// after lunch time
+								      lastHour = lastHour.plus(schedule.getLunchBreakLengthInMinutes());
+								      classHour.setBeginsAt(dateToDateTime(date, lastHour.toLocalTime()));
+							          } 
+							          else {    // rest class hours of that day
+								      classHour.setBeginsAt(dateToDateTime(date, lastHour.toLocalTime()));
+							          }
+							          classHour.setEndsAt(classHour.getBeginsAt().plus(schedule.getClassHoursLengthInMinutes()));
+							          classHour.setClassStatus(CLASSSTATUS.NOT_SCHEDULED);
+							          classHour.setAcademicProgram(academicProgarm);
+							          perDayClassHours.add(classHourRepository.save(classHour));
+							          lastHour = perDayClassHours.get(entry - 1).getEndsAt();
+						              currentTime = lastHour.toLocalTime();
+							          if (currentTime.equals(schedule.getClosesAt()))// school closing time
+							          break;
+					                  }
+						              date = date.plusDays(1);
+					           }
+				                      academicProgarm.setClassHour(perDayClassHours);
+					                  programRepo.save(academicProgarm);
+					                  structure.setStatus(programId);
+					                  structure.setData(null);
+					                  structure.setMessage("ClassHour Generated for::" + academicProgarm.getProgramName());
+					                  return new ResponseEntity<ResponseStructure<ClassHourResponse>>(structure, HttpStatus.CREATED);
+				             }  
+			      			       
+				      
+			       
+			                      else
+				                  throw new IllegalArgumentException("ClassHours Already Generated for::"
+						          + academicProgarm.getProgramName() + "of Id:" + academicProgarm.getProgramId());
+		                          }).orElseThrow(() -> new ProgramNotFoundByIdException("Invalid Program Id"));
+		                 }
 
 	@Override
-	public ResponseEntity<ResponseStructure<List<ClassHourResponse>>>   updateClassHour(List<ClassHourRequest> classhourrequestlist) {
-		
-		List<ClassHourResponse> updatedClassHourResponses=new ArrayList<>();
-		ResponseStructure<List<ClassHourResponse>> structure=new ResponseStructure<>();
+	public ResponseEntity<ResponseStructure<List<ClassHourResponse>>> updateClassHour(
+			List<ClassHourRequest> classhourrequestlist) {
 
+		List<ClassHourResponse> updatedClassHourResponses = new ArrayList<>();
+		ResponseStructure<List<ClassHourResponse>> structure = new ResponseStructure<>();
+		for (ClassHourRequest req : classhourrequestlist) {
+			return userRepositary.findById(req.getUserId()).map(user -> {
+				return classHourRepository.findById(req.getClassHourId()).map(classHour -> {
+					return subjectRepositary.findById(req.getSubjectId()).map(subject -> {
+						if (user.getUserRole().equals(USERROLE.TEACHER) && user.getSubject().equals(subject)) {
+							boolean isPresent = classHourRepository.existsByBeginsAtBetweenAndRoomNo(
+									classHour.getBeginsAt(), classHour.getEndsAt(), req.getRoomNo());
 
-		for(ClassHourRequest req : classhourrequestlist)
-		{
-			return	userRepositary.findById(req.getUserId()).map(user ->{
-
-				return classHourRepository.findById(req.getClassHourId()).map(classHour->{
-
-					return subjectRepositary.findById(req.getSubjectId()).map(subject->{
-
-						if(user.getUserRole().equals(USERROLE.TEACHER) && user.getSubject().equals(subject))
-						{
-
-							boolean isPresent=classHourRepository.existsByBeginsAtBetweenAndRoomNo(classHour.getBeginsAt(), classHour.getEndsAt(), req.getRoomNo());
-
-							if(isPresent)
-							{
+							if (isPresent) {
 								throw new DataAlreadyExistException("class room already assigned");
 							}
 
-							else 
-							{
+							else {
 								classHour.setSubject(subject);
 								classHour.setUser(user);
 								classHour.setRoomNo(req.getRoomNo());
-								
 								classHourRepository.save(classHour);
-
 								updatedClassHourResponses.add(mapToResponse(classHour));
-								
-								
 								structure.setStatus(HttpStatus.OK.value());
 								structure.setMessage("Updated");
 								structure.setData(updatedClassHourResponses);
-
-								return new ResponseEntity<ResponseStructure<List<ClassHourResponse>>>(structure,HttpStatus.OK);
+								return new ResponseEntity<ResponseStructure<List<ClassHourResponse>>>(structure,
+										HttpStatus.OK);
 							}
 						}
 
-						else 
+						else
 							throw new IllegalArgumentException("Unable to update teacher with given subject");
 
+					}).orElseThrow(() -> new IllegalArgumentException("subject not found "));
 
-					}).orElseThrow(()->new IllegalArgumentException("subject not found "));
+				}).orElseThrow(() -> new IllegalArgumentException("Class houn not present"));
 
-				}).orElseThrow(()->new IllegalArgumentException("Class houn not present"));
-
-			}).orElseThrow(()->new UserNotFoundByIdException("user not found"));
+			}).orElseThrow(() -> new UserNotFoundByIdException("user not found"));
 		}
 		return null;
-
 	}
+	
+	
+	
+	
+
+
+	
+	
+	
+	
+	
+	
+
 }

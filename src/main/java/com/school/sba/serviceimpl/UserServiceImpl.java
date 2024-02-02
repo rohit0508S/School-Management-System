@@ -2,22 +2,17 @@ package com.school.sba.serviceimpl;
 
 import java.util.List;
 import java.util.Optional;
-
-import javax.security.auth.Subject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.school.sba.entity.AcademicProgram;
 import com.school.sba.entity.User;
 import com.school.sba.enums.USERROLE;
 import com.school.sba.exception.AdminCannotBeAssignToAcademicProgramException;
 import com.school.sba.exception.DataNotExistException;
-import com.school.sba.exception.InvalidSubjectException;
 import com.school.sba.exception.InvalidUserRoleException;
 import com.school.sba.exception.ProgramNotFoundByIdException;
 import com.school.sba.exception.SchoolDataNotFoundException;
@@ -31,6 +26,7 @@ import com.school.sba.requestdto.UserRequest;
 import com.school.sba.responsedto.UserResponse;
 import com.school.sba.service.UserService;
 import com.school.sba.utility.ResponseStructure;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -81,24 +77,29 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponse>> findUserById(int userId) {
-
 		User user = userRepo.findById(userId).orElseThrow(()->new UserNotFoundByIdException("User Not present for given id"));
-
 		UserResponse userResponse = mapToUserResponse(user);
-
 		structure.setStatus(HttpStatus.FOUND.value());
 		structure.setMessage("User Found");
 		structure.setData(userResponse);
 		return new ResponseEntity<ResponseStructure<UserResponse>>(structure,HttpStatus.FOUND);
 	}
+	
+	
 
+	
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponse>> deleteUserById(int userId) {
-		User user = userRepo.findById(userId).orElseThrow(()->new UserNotFoundByIdException("User Not present for given id"));
+		User user = userRepo.findById(userId).orElseThrow(()->new UserNotFoundByIdException("User Not present for given id"));		
+		user.setDeleted(true);		                                    
+		User user2 = userRepo.save(user);
 		
-		if(user.isDeleted()==false)
-			user.setDeleted(true);		
-		User user2 = userRepo.save(user);			
+		
+		List<User> user3=userRepo.findByIsDeleted(true);
+		for (User user1 : user3) {
+            userRepo.delete(user1);
+        }
+		
 		UserResponse userResponse = mapToUserResponse(user2);
 		structure.setStatus(HttpStatus.OK.value());
 		structure.setMessage("deletion status updated successfully");
@@ -106,6 +107,15 @@ public class UserServiceImpl implements UserService {
 		return new ResponseEntity<ResponseStructure<UserResponse>>(structure,HttpStatus.OK);
 	}
 
+
+	public void deleteSoftDeleted() {				
+		List<User> user3=userRepo.findByIsDeleted(true);
+		for (User user1 : user3) {
+            userRepo.delete(user1);
+        }
+	}
+	
+		
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponse>> assignUsersToAcademicProgram(int programId, int userId) {		
 		User user = userRepo.findById(userId).orElseThrow(()-> new UserNotFoundByIdException("User Not Present for given user id"));		
@@ -152,14 +162,6 @@ public class UserServiceImpl implements UserService {
 				throw new UnAuthorisedUserException("Invalid User, we cant add");
 		}).orElseThrow(()->new UserNotFoundByIdException("User Not Present for given user id"));
 	}
-	
-	
-	
-	
-	
-	
-	
-
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponse>> createAdmin(UserRequest userRequest) {
 		User user = mapToUser(userRequest);

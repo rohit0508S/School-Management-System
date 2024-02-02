@@ -8,4 +8,6 @@ import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 public interface SchoolRepositary extends JpaRepository<School, Integer>{
 
+	School findByIsDeleted(boolean b);
+      
 }

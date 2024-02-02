@@ -41,8 +41,6 @@ public class UserController {
 		return userService.findUserById(userId);
 	}
 
-	
-
 	// For multiple users authority
 	// "hasAuthority('ADMIN') OR hasAuthority('STUDENT')"
 
@@ -51,7 +49,8 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<UserResponse>> deleteUserById(@PathVariable int userId) {
 		return userService.deleteUserById(userId);
 	}
-
+		
+	
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PutMapping("/academic-programs/{programId}/users/{userId}")
 	public ResponseEntity<ResponseStructure<UserResponse>> addAcademicProgramToUser(@PathVariable int programId,

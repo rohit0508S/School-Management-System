@@ -1,6 +1,7 @@
 package com.school.sba.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,11 +12,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.school.sba.entity.AcademicProgram;
+import com.school.sba.entity.ClassHour;
 import com.school.sba.entity.User;
 import com.school.sba.enums.USERROLE;
 import com.school.sba.exception.DataNotExistException;
 import com.school.sba.exception.SchoolNotFoundByIdException;
 import com.school.sba.repositary.AcademicProgramRepositary;
+import com.school.sba.repositary.ClassHourRepository;
 import com.school.sba.repositary.SchoolRepositary;
 import com.school.sba.repositary.SubjectRepositary;
 import com.school.sba.repositary.UserRepositary;
@@ -38,6 +41,8 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 	private SchoolRepositary schoolRepo;
 	@Autowired
 	private ResponseStructure<AcademicProgramResponse> structure;
+	@Autowired
+	private ClassHourRepository classHourRepository;
 
 	private AcademicProgram mapToAcademicProgram(AcademicProgramRequest programRequest) {
 		return new AcademicProgram().builder().programtype(programRequest.getProgramtype())
@@ -108,5 +113,20 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 		}).orElseThrow(() -> new SchoolNotFoundByIdException("School Not Present for given school id"));
 	}
 
-	
-}
+public void deleteAcademicProgramPermanently() {
+		
+		List<AcademicProgram> list = programRepo.findByIsDeleted(true);
+		
+		if(!list.isEmpty())
+		{
+			for(AcademicProgram program:list)
+			{
+				classHourRepository.deleteAll(program.getClassHour());
+				programRepo.delete(program);
+			}
+		}
+
+	}
+		
+	}
+		

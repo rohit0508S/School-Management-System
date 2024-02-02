@@ -1,9 +1,7 @@
 package com.school.sba.serviceimpl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +9,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.school.sba.entity.AcademicProgram;
 import com.school.sba.entity.School;
+import com.school.sba.entity.User;
 import com.school.sba.enums.USERROLE;
 
 import com.school.sba.exception.DataAlreadyExistException;
-import com.school.sba.exception.SchoolDataNotFoundException;
-import com.school.sba.exception.SchoolNotFoundByIdException;
-import com.school.sba.exception.UserNotFoundByIdException;
+import com.school.sba.repositary.AcademicProgramRepositary;
+import com.school.sba.repositary.ClassHourRepository;
 import com.school.sba.repositary.SchoolRepositary;
 import com.school.sba.repositary.UserRepositary;
 import com.school.sba.requestdto.SchoolRequest;
@@ -33,7 +32,10 @@ public class SchoolServiceImpl implements SchoolService {
 	SchoolRepositary schoolRepo;
 	@Autowired
 	UserRepositary userRepo;
-
+	@Autowired
+	ClassHourRepository classHourRepo;
+	@Autowired
+	AcademicProgramRepositary programRepo;
 	@Autowired
 	ResponseStructure<SchoolResponse> structure;
 
@@ -79,6 +81,18 @@ public class SchoolServiceImpl implements SchoolService {
 		}).orElseThrow(() -> new UsernameNotFoundException("User Not Present"));
 
 	}
-
+	
+	@Override
+	public void deleteSchoolPermanently() {
+		School school = schoolRepo.findByIsDeleted(true);
+		List<User> users = userRepo.findByUserRoleNot(USERROLE.ADMIN);
+		userRepo.deleteAll(users);
+		List<AcademicProgram> programs = school.getPrograms();
+		for (AcademicProgram program : programs) {
+			classHourRepo.deleteAll(program.getClassHour());
+		}
+		programRepo.deleteAll(programs);
+		schoolRepo.delete(school);
+	}
 
 }

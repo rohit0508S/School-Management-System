@@ -36,6 +36,9 @@ public class AcademicProgram {
 	private String programName;
 	private LocalDate beginsAt;
 	private LocalDate endsAt;
+	private boolean isDeleted;
+	//cron express
+	private boolean autoRepeat;
 	
 	@ManyToOne
 	private School school;
