@@ -23,7 +23,7 @@ public class SubjectController {
 
 	@Autowired
 	private SubjectService subjectService;
-	
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/academic-programs/{programId}/subjects")
 	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> addSubjects(@PathVariable int programId,@RequestBody SubjectRequest subjectRequest)
 	{

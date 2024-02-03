@@ -38,7 +38,7 @@ public class AcademicProgram {
 	private LocalDate endsAt;
 	private boolean isDeleted;
 	//cron express
-	private boolean autoRepeat;
+	private boolean autoRepeatScheduled;
 	
 	@ManyToOne
 	private School school;

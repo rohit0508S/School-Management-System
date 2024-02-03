@@ -17,15 +17,20 @@ public class ScheduleJobs {
 	@Autowired
 	ClassHourImpl classHour;
 	
-	@Scheduled(fixedDelay = 1000*60*60L)
+//	@Scheduled(fixedDelay = 1000*60)
 	public void deleteUser() {
-		userService.deleteSoftDeleted();
+		userService.deleteSoftDeletedUser();
 		System.out.println("::deleted data of user soft-deleted data");		
 	}	
-	@Scheduled(fixedDelay = 1000*60*60L)
+//	@Scheduled(fixedDelay = 1000*60)
 	public void deleteAcademicProgram() {
 		program.deleteAcademicProgramPermanently();
 		System.out.println("::deleted data of academic-program data");
+	}
+//	@Scheduled(fixedDelay = 1000*60)
+	public void updateClassHour() {
+		classHour.autoGenerateClassHour();
+		System.out.println("::Update class hour ");
 	}
 	
 	

@@ -33,7 +33,5 @@ public class Schedule {
 	private Duration breakeLengthInMinutes;
 	private LocalTime lunchTime;
 	private Duration lunchBreakLengthInMinutes;
-//	@OneToOne(mappedBy = "scheduleld")
-//	private School school;
 	
 }

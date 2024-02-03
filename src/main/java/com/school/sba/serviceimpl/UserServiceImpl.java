@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-	public void deleteSoftDeleted() {				
+	public void deleteSoftDeletedUser() {				
 		List<User> user3=userRepo.findByIsDeleted(true);
 		for (User user1 : user3) {
             userRepo.delete(user1);

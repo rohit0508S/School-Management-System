@@ -15,6 +15,10 @@ public interface AcademicProgramService {
 			AcademicProgramRequest programRequest);
 
 	ResponseEntity<ResponseStructure<List<AcademicProgramResponse>>> findAllAcademicPrograms(int schoolId);
+	  public void deleteAcademicProgramPermanently();
+	ResponseEntity<ResponseStructure<AcademicProgramResponse>> autoRepeatScheduleON(int programId,boolean autoRepeatScheduled);
+
+	ResponseEntity<ResponseStructure<String>> deleteAcademicProgramById(int programId);
 
 		
 }

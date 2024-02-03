@@ -1,11 +1,13 @@
 package com.school.sba.service;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
 import com.school.sba.requestdto.ClassHourUpdateRequest;
+import com.school.sba.requestdto.ExcelRequestDto;
 import com.school.sba.requestdto.ClassHourRequest;
 import com.school.sba.requestdto.UserRequest;
 import com.school.sba.responsedto.ClassHourResponse;
@@ -17,6 +19,8 @@ public interface ClassHourService {
 	ResponseEntity<ResponseStructure<ClassHourResponse>> addClassHour(int programId, ClassHourRequest classHourRequest);
 
 	ResponseEntity<ResponseStructure<List<ClassHourResponse>>> updateClassHour(List<ClassHourRequest> classHourUpdateRequests);
+
+	ResponseEntity<ResponseStructure<String>> addClassHourUsingExcel(int programId, ExcelRequestDto excelRequestDto);
 	
 
 }

@@ -53,8 +53,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 	@Override
 	public ResponseEntity<ResponseStructure<ScheduleResponse>> adminCreateSchedule(int schoolId,ScheduleRequest scheduleRequest) 
 	{
-		return schoolRepo.findById(schoolId).map(school->{
-			
+		return schoolRepo.findById(schoolId).map(school->{			
 			if(school.getSchedule()==null)
 			{
 				Schedule schedule = mapToSchedule(scheduleRequest);
@@ -77,9 +76,10 @@ public class ScheduleServiceImpl implements ScheduleService{
 		
 	}
 	
-	
-	
-	
+	private Schedule deleteSchedule(Schedule schedule) {
+		scheduleRepo.delete(schedule);
+		return schedule;
+	}
 	
 	
 	
@@ -110,17 +110,12 @@ public class ScheduleServiceImpl implements ScheduleService{
 		return scheduleRepo.findById(scheduleId).map(schedule->{
 			
 			Schedule schedule2 = mapToSchedule(scheduleRequest);
-			schedule2.setScheduleId(schedule.getScheduleId());
-			
-			 schedule2 = scheduleRepo.save(schedule2);
-			 
+			 schedule2.setScheduleId(schedule.getScheduleId());			
+			 schedule2 = scheduleRepo.save(schedule2);			 
 			 structure.setStatus(HttpStatus.OK.value());
 			 structure.setMessage("Schedule Updated Successfylly");
-			 structure.setData(mapToScheduleResponse(schedule2));
-			 
-			 return new ResponseEntity<ResponseStructure<ScheduleResponse>>(structure,HttpStatus.OK);
-			
+			 structure.setData(mapToScheduleResponse(schedule2));			 
+			 return new ResponseEntity<ResponseStructure<ScheduleResponse>>(structure,HttpStatus.OK);			
 		}).orElseThrow(()->new ScheduleNotFoundByIdException("schedule not present for given schedule id"));
-	
 	}
 }

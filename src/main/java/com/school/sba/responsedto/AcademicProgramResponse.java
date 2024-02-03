@@ -20,5 +20,6 @@ public class AcademicProgramResponse {
 	private LocalDate beginsAt;
 	private LocalDate endsAt;
 	private List<String> subjects;
+	private boolean autoRepeatScheduled;
 
 }

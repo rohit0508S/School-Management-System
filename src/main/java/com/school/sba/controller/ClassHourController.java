@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.school.sba.requestdto.ClassHourUpdateRequest;
+import com.school.sba.requestdto.ExcelRequestDto;
 import com.school.sba.requestdto.ClassHourRequest;
 import com.school.sba.responsedto.ClassHourResponse;
 import com.school.sba.service.ClassHourService;
@@ -31,5 +30,10 @@ public class ClassHourController {
 	public ResponseEntity<ResponseStructure<List<ClassHourResponse>>> updateClassHour(@RequestBody List<ClassHourRequest> classHourRequests){
 		return classHourService.updateClassHour(classHourRequests);
 	}
+	
+    @PostMapping("/academic-program/{programId}/class-hours/write-excel")
+    public ResponseEntity<ResponseStructure<String>> addClassHourUsingExcel(@PathVariable int programId,@RequestBody ExcelRequestDto excelRequestDto){
+    	return classHourService.addClassHourUsingExcel(programId,excelRequestDto);
+    } 
 	
 }
