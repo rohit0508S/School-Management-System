@@ -39,8 +39,17 @@ public class ClassHourController {
     public ResponseEntity<ResponseStructure<String>> addClassHourUsingExcel(@PathVariable int programId,@RequestBody ExcelRequestDto excelRequestDto){
     	return classHourService.addClassHourUsingExcel(programId,excelRequestDto);
     } 
+    
+    
+    
+    
+    
+    
+    
     @PostMapping("/academic-program/{programId}/class-hours/from/{fromDate}/to/{toDate}/write-excel")
-    public ResponseEntity<ResponseStructure<String>>   writeToExcelSheet(@PathVariable int programId,@PathVariable LocalDate fromDate,@PathVariable LocalDate toDate, @RequestParam MultipartFile file){
+    public ResponseEntity<?>   addClassHourUsingMultipartFile(@PathVariable int programId,@PathVariable LocalDate fromDate,@PathVariable LocalDate toDate, @RequestParam MultipartFile file)
+    throws Exception
+    {
     	return classHourService.addClassHourUsingMultipartFile(programId,fromDate,toDate,file);
     }
 	

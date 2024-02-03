@@ -20,11 +20,7 @@ public interface ClassHourService {
 
 	ResponseEntity<ResponseStructure<String>> addClassHourUsingExcel(int programId, ExcelRequestDto excelRequestDto);
 
-	ResponseEntity<ResponseStructure<String>> addClassHourUsingMultipartFile(int programId, LocalDate fromDate,
-			LocalDate toDate, MultipartFile file);
-
-//	ResponseEntity<ResponseStructure<String>> addClassHourUsingMultipartFile(int programId, LocalDate fromDate,
-//			LocalDate toDate, MultipartFile file);
-	
+	ResponseEntity<?> addClassHourUsingMultipartFile(int programId, LocalDate fromDate,
+			LocalDate toDate, MultipartFile file) throws Exception;
 
 }

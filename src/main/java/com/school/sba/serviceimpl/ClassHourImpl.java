@@ -1,28 +1,24 @@
 package com.school.sba.serviceimpl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.poi.sl.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.tomcat.util.http.ConcurrentDateFormat;
-import org.hibernate.grammars.hql.HqlParser.CurrentDateFunctionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.auditing.CurrentDateTimeProvider;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +27,6 @@ import com.school.sba.entity.AcademicProgram;
 import com.school.sba.entity.ClassHour;
 import com.school.sba.entity.Schedule;
 import com.school.sba.entity.School;
-import com.school.sba.entity.Subject;
-import com.school.sba.entity.User;
 import com.school.sba.enums.CLASSSTATUS;
 import com.school.sba.enums.USERROLE;
 import com.school.sba.exception.DataAlreadyExistException;
@@ -43,12 +37,10 @@ import com.school.sba.repositary.AcademicProgramRepositary;
 import com.school.sba.repositary.ClassHourRepository;
 import com.school.sba.repositary.SubjectRepositary;
 import com.school.sba.repositary.UserRepositary;
-import com.school.sba.requestdto.ClassHourUpdateRequest;
 import com.school.sba.requestdto.ExcelRequestDto;
 import com.school.sba.requestdto.ClassHourRequest;
 import com.school.sba.responsedto.ClassHourResponse;
 import com.school.sba.service.ClassHourService;
-import com.school.sba.utility.ResponseEntityProxy;
 import com.school.sba.utility.ResponseStructure;
 
 @Service
@@ -304,13 +296,13 @@ public class ClassHourImpl implements ClassHourService {
 	
 	
 	
-	
+	//file content excel sheet
 	
 	
 
 	@Override
-	public ResponseEntity<ResponseStructure<String>> addClassHourUsingMultipartFile(int programId, LocalDate fromDate,
-			LocalDate toDate, MultipartFile file)  {
+	public ResponseEntity<?> addClassHourUsingMultipartFile(int programId, LocalDate fromDate,
+			LocalDate toDate, MultipartFile file) throws Exception  {
 		Optional<AcademicProgram> optional = programRepo.findById(programId);
 		AcademicProgram program = optional.get();
 		
@@ -324,11 +316,9 @@ public class ClassHourImpl implements ClassHourService {
 		DateTimeFormatter dateFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		
 		XSSFWorkbook workbook = null;
-		try {
+		
 			workbook = new XSSFWorkbook(file.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 		workbook.forEach(sheet->{
 			int rowNumber=0;
 			Row header=sheet.createRow(rowNumber);
@@ -356,11 +346,20 @@ public class ClassHourImpl implements ClassHourService {
 			}
 		});
 		
+	ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
 	
+		workbook.write(outputStream);
+	
+		workbook.close();
+	
+	   byte[] byteData=outputStream.toByteArray();
+	   
+	 
+	   return ResponseEntity.ok()
+			   .header("Content Disposition","attachment; filename="+file.getOriginalFilename())
+			   .contentType(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+			   .body(byteData);
 		
 		return null;
 	}
-
-
-
 }
