@@ -25,6 +25,7 @@ import org.springframework.data.auditing.CurrentDateTimeProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.school.sba.entity.AcademicProgram;
 import com.school.sba.entity.ClassHour;
@@ -229,13 +230,23 @@ public class ClassHourImpl implements ClassHourService {
 			System.out.println("Auto repeat schedule: OFF");
 	}
 
+	
+	
+	
+	
+	
 	@Override
 	public ResponseEntity<ResponseStructure<String>> addClassHourUsingExcel(int programId,
 			ExcelRequestDto excelRequestDto)   {
+		
+		
+		
 		Optional<AcademicProgram> optional = programRepo.findById(programId);
 		AcademicProgram program = optional.get();
 		String path="C:\\Users\\rohit kumar\\Desktop\\DemoSpringBootXl";
 		String filePath=path+"demo.xlsx";
+		
+		
 		LocalDateTime from=excelRequestDto.getFromDate().atTime(LocalTime.MIDNIGHT);
 		LocalDateTime to=excelRequestDto.getToDate().atTime(LocalTime.MIDNIGHT).plusDays(1);
 		List<ClassHour> classHours=classHourRepository.findAllByAcademicProgramAndBeginsAtBetween(program, from, to);
@@ -284,6 +295,70 @@ public class ClassHourImpl implements ClassHourService {
 		structure.setData(null);
 		
 	return new ResponseEntity<ResponseStructure<String>>(HttpStatus.CREATED);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	@Override
+	public ResponseEntity<ResponseStructure<String>> addClassHourUsingMultipartFile(int programId, LocalDate fromDate,
+			LocalDate toDate, MultipartFile file)  {
+		Optional<AcademicProgram> optional = programRepo.findById(programId);
+		AcademicProgram program = optional.get();
+		
+		LocalDateTime from=fromDate.atTime(LocalTime.MIDNIGHT);
+		LocalDateTime to=toDate.atTime(LocalTime.MIDNIGHT).plusDays(1);
+		List<ClassHour> classHours=classHourRepository.findAllByAcademicProgramAndBeginsAtBetween(program, from, to);
+		
+		
+
+		DateTimeFormatter timeFormatter=DateTimeFormatter.ofPattern("HH:mm");
+		DateTimeFormatter dateFormatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		XSSFWorkbook workbook = null;
+		try {
+			workbook = new XSSFWorkbook(file.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		workbook.forEach(sheet->{
+			int rowNumber=0;
+			Row header=sheet.createRow(rowNumber);
+			header.createCell(0).setCellValue("");
+			header.createCell(1).setCellValue("BeginsAt");
+			header.createCell(2).setCellValue("En");
+			header.createCell(3).setCellValue("Subject");
+			header.createCell(4).setCellValue("UserName");
+			header.createCell(5).setCellValue("Room No");
+			
+			for(ClassHour classHour:classHours) {
+				Row row=sheet.createRow(++rowNumber);
+				row.createCell(0).setCellValue(dateFormatter.format(classHour.getBeginsAt()));
+				row.createCell(1).setCellValue(timeFormatter.format(classHour.getBeginsAt()));
+				row.createCell(2).setCellValue(timeFormatter.format(classHour.getEndsAt()));
+				if(classHour.getUser()==null)
+					row.createCell(3).setCellValue(classHour.getUser().getUserName());
+				else
+					row.createCell(3).setCellValue(classHour.getUser().getUserName());
+				   if(classHour.getSubject()==null) 
+				row.createCell(4).setCellValue(classHour.getSubject().getSubjectName());
+				   else
+					   row.createCell(4).setCellValue(classHour.getSubject().getSubjectName());
+				row.createCell(5).setCellValue(classHour.getRoomNo());
+			}
+		});
+		
+	
+		
+		return null;
 	}
 
 
